@@ -11,7 +11,8 @@ function Input({
   inputRef,
 }) {
   return (
-    <div>
+    <div className="">
+      <label className="mb-2 block"> {placeholder.toWellFormed()} :</label>
       <input
         ref={inputRef}
         type={type}

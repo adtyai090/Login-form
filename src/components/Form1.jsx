@@ -2,9 +2,14 @@ import React, { useRef } from "react";
 import { useState } from "react";
 import Input from "./Input";
 import { CiEdit } from "react-icons/ci";
+import { FaCheck } from "react-icons/fa";
 
 function Form1() {
   const [step, setStep] = useState(1);
+  const [success, setSuccess] = useState(false)
+  const [formModel, setFormModel] = useState(false)
+  const [editField, setEditField] = useState("")
+  // const [clickBtn, setClickBtn]= useState(false)
   // const [isEditing, setIsEditing] = useState(false);
 
   const [errors, setErrors] = useState({
@@ -25,42 +30,29 @@ function Form1() {
   const inputRefs = useRef({});
 
   const handleEdit = (stepValue, fieldName) => {
-    setStep(stepValue);
-
+    setEditField(stepValue);
+    setFormModel(true);
     setTimeout(() => {
       inputRefs.current[fieldName]?.focus();
     }, 0);
-    console.log("inputRefs.current.firstName", inputRefs.current);
   };
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // const formSubmit = (e) => {
-  //   e.preventDefault();
-  //   setStep(3);
-  //   console.log('first', first)
-  // };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // setFormData({
-    //   firstName: "",
-    //   lastName: "",
-    //   email: "",
-    //   phone: "",
-    //   message: "",
-    // });
+    setSuccess(true)
+    setTimeout(() => {
+      setSuccess(false)
+    }, 1500);
+    setStep(1);
+    setFormData({})
   };
-
-  // useEffect(() => {
-  //   if (step === 1) {
-  //     inputRefs.current.firstName?.focus();
-  //   }
-  // }, [step]);
 
   return (
     <div className="main_form_sec py-15 bg-pink-100 w-full h-lvh ">
@@ -74,7 +66,6 @@ function Form1() {
               <div className="flex flex-col gap-2">
                 <div className="grid grid-cols-2 gap-2">
                   <Input
-                    // onBlur={() => setIsEditing(false)}
                     type="text"
                     name="firstName"
                     placeholder="First Name"
@@ -82,7 +73,6 @@ function Form1() {
                     z
                     onChange={handleChange}
                     errors={errors}
-                    // isEditing={isEditing}
                     inputRef={(el) => {
                       inputRefs.current.firstName = el;
 
@@ -103,7 +93,7 @@ function Form1() {
                   <Input
                     type="email"
                     name="email"
-                    placeholder="Email Id:"
+                    placeholder="Email Id"
                     value={formData.email}
                     onChange={handleChange}
                     errors={errors}
@@ -115,7 +105,7 @@ function Form1() {
                   <Input
                     type="tel"
                     name="phone"
-                    placeholder="Phone No:"
+                    placeholder="Phone No"
                     value={formData.phone}
                     errors={errors}
                     onChange={handleChange}
@@ -208,14 +198,13 @@ function Form1() {
                   <ul>
                     <li className="mb-2 text-md flex items-center justify-between p-4 bg-gray-100 rounded-2xl">
                       <div>
-                        <b className="text-lg text-pink-500">Name: </b>
+                        <b className="text-[17px] font-semibold text-pink-500">First Name: </b>
                         {formData.firstName}
-                        {formData.lastName}
                       </div>
                       <span
                         className=""
                         onClick={() => {
-                          handleEdit(1, "firstName");
+                          handleEdit(1, "firstName")
                         }}
                       >
                         <CiEdit className="text-2xl" />
@@ -223,7 +212,21 @@ function Form1() {
                     </li>
                     <li className="mb-2 text-md flex items-center justify-between p-4 bg-gray-100 rounded-2xl">
                       <div>
-                        <b className="text-lg text-pink-500">Mobile No: </b>
+                        <b className="text-[17px] font-semibold text-pink-500">Last Name: </b>
+                        {formData.lastName}
+                      </div>
+                      <span
+                        className=""
+                        onClick={() => {
+                          handleEdit(1, "lastName")
+                        }}
+                      >
+                        <CiEdit className="text-2xl" />
+                      </span>
+                    </li>
+                    <li className="mb-2 text-md flex items-center justify-between p-4 bg-gray-100 rounded-2xl">
+                      <div>
+                        <b className="text-[17px] font-semibold text-pink-500">Mobile No: </b>
                         {formData.phone}
                       </div>
                       <span
@@ -237,7 +240,7 @@ function Form1() {
                     </li>
                     <li className="mb-2 text-md flex items-center justify-between p-4 bg-gray-100 rounded-2xl">
                       <div>
-                        <b className="text-lg text-pink-500">Email Id: </b>{" "}
+                        <b className="text-[17px] font-semibold text-pink-500">Email Id: </b>{" "}
                         {formData.email}
                       </div>
                       <span
@@ -252,7 +255,7 @@ function Form1() {
                     {formData.message && (
                       <li className="mb-2 text-md flex items-center justify-between p-4 bg-gray-100 rounded-2xl">
                         <div>
-                          <b className="text-lg text-pink-500"> Message: </b>{" "}
+                          <b className="text-[17px] font-semibold text-pink-500"> Message: </b>{" "}
                           {formData.message}
                         </div>
                         <span
@@ -271,7 +274,7 @@ function Form1() {
                 <div className="flex align-center justify-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setStep(step -1)}
+                    onClick={() => setStep(step - 1)}
                     className="p-4 rounded-xl uppercase font-semibold text-md bg-gray-500 text-white w-full"
                   >
                     Back
@@ -295,6 +298,93 @@ function Form1() {
             </div>
           )}
         </form>
+
+        <div className="form_model">
+          {formModel && (
+            <div className="absolute bg-[#fce7f3] top-0 left-0 w-full h-full flex items-center justify-center shadow-lg">
+              {editField === 1 && (
+                <div className="step1 shadow-2xl px-6 pt-12 pb-14 rounded-2xl bg-white">
+                  <h1 className="text-black text-[42px] font-bold text-center mb-4.5 uppercase">
+                    Sign <span className="text-pink-500 ">Up</span>
+                  </h1>
+                  <div className="flex flex-col gap-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input
+                        type="text"
+                        name="firstName"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        z
+                        onChange={handleChange}
+                        errors={errors}
+                        inputRef={(el) => {
+                          inputRefs.current.firstName = el;
+
+                          console.log("El", el);
+                        }}
+                      />
+
+                      <Input
+                        type="text"
+                        name="lastName"
+                        placeholder="Last Name"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        errors={errors}
+                        inputRef={(el) => (inputRefs.current.lastName = el)}
+                      />
+
+                      <Input
+                        type="email"
+                        name="email"
+                        placeholder="Email Id:"
+                        value={formData.email}
+                        onChange={handleChange}
+                        errors={errors}
+                        // onBlur={() => setIsEditing(false)}
+                        // isEditing={isEditing}
+                        inputRef={(el) => (inputRefs.current.email = el)}
+                      />
+
+                      <Input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone No:"
+                        value={formData.phone}
+                        errors={errors}
+                        onChange={handleChange}
+                        inputRef={(el) => (inputRefs.current.phone = el)}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="p-4 rounded-xl uppercase font-semibold text-md bg-pink-400 text-white w-full"
+                      onClick={() => {
+                        setFormData({
+                          firstName: formData.firstName,
+                          lastName: formData.lastName,
+                          email: formData.email,
+                          phone: formData.phone,
+                        });
+                        setFormModel(false);
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="Success_popup">
+          {success && (
+            <div className="success_message bg-green-500 text-white shadow-lg absolute top-15 right-15 p-5 rounded-xl flex items-center gap-2 justify-center" >
+              <FaCheck className="bg-white text-green-500 p-1 rounded-3 text-2xl" /> Form Submitted Successfully!
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
